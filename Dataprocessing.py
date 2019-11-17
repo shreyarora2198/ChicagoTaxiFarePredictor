@@ -13,6 +13,7 @@ df.dropna(axis = 1, how ='all', inplace = True)
 df.drop(['taxi_id','trip_end_timestamp','dropoff_census_tract','pickup_community_area','dropoff_community_area','tips','tolls','extras','trip_total','payment_type','company'], axis =1, inplace = True)
 df.dropna(inplace = True)
 
+
 fare_list = df.loc[: , "fare"]
 datetime_list = df.loc[:,"trip_start_timestamp"]
 
