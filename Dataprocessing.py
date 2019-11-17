@@ -12,14 +12,8 @@ print (df)
 list = df.loc[: , "fare"]
 #print (list)
 i = 0 
-for j in range(len(list)) :
-    result = list[j] * 0.2
-    label[j] = math.floor(result)
+for fare in list :
+    result = fare * 0.2
+    label.append(math.floor(result))
     
 df['Fare_Label'] = label
-    
-   
-   
-        
-
-
