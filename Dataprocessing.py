@@ -3,8 +3,10 @@ import math
 
 label = []
 #mystring = []
+date_and_time = []
+complete_date = []
+day = []
 time = []
-time2 = []
 totaltime = []
 
 df =  pandas.read_csv('test.csv')
@@ -12,7 +14,6 @@ df.dropna(axis = 1, how ='all', inplace = True)
 
 df.drop(['taxi_id','trip_end_timestamp','dropoff_census_tract','pickup_community_area','dropoff_community_area','tips','tolls','extras','trip_total','payment_type','company'], axis =1, inplace = True)
 df.dropna(inplace = True)
-
 
 fare_list = df.loc[: , "fare"]
 datetime_list = df.loc[:,"trip_start_timestamp"]
@@ -23,11 +24,16 @@ for fare in fare_list :
         result = 20
     label.append(math.floor(result))
 i = 0
+print(datetime_list[0])
 for row in datetime_list :
-    time.append(row.split(" ",1))
-    time2.append(time[i][1].split(":",))
-    totaltime.append(int(time2[i][0])*60 + int(time2[i][1]))
+    date_and_time.append(row.split(" ",1))
+    time.append(date_and_time[i][1].split(":",))
+    complete_date.append(date_and_time[i][0].split("-",))
+    day.append(complete_date[i][2])
+    
+    totaltime.append(int(time[i][0])*60 + int(time[i][1]))
     i += 1
  
 df['Fare_Label'] = label
-df['Time_Label'] = totaltime 
+df['Time_Label'] = totaltime
+df['Date'] = day
