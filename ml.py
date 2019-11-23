@@ -15,24 +15,16 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
 
 def kNN_prediction():
-        
-    # Randomly split data into 70% training and 30% test
-    X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.30)
     
     # Train a kNN model using the training set
     clf_KNN = KNeighborsClassifier()
     clf_KNN.fit(X_train, y_train)
     
-    # Predictions using the kNN model on the test set
-    print("Predicting labels of the test data set - %i random samples" % (len(X_test)))
     result = clf_KNN.predict(X_test)
     
     return str(accuracy_score(y_test, result))
 
 def nb_prediction():
-    
-    # Randomly split data into 70% training and 30% test
-    X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.30)
     
     # Create NB classifier: 
     nb = GaussianNB()
@@ -47,11 +39,8 @@ def nb_prediction():
 
 def nn_prediction():
     
-    # Randomly split data into 70% training and 30% test
-    X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.30)
-    
-    learning_rate = 0.1
-    num_hidden_layers = 3
+    learning_rate = 0.01
+    num_hidden_layers = 7
 
     clf = MLPClassifier(solver='sgd', activation='logistic', 
      learning_rate_init=learning_rate, learning_rate='constant', max_iter=1000, verbose='true',
@@ -76,6 +65,9 @@ temp_targetlist = target.values.tolist()
 targetlist = []
 for array in temp_targetlist:
     targetlist.append(array[0])
+
+# Randomly split data into 70% training and 30% test
+X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.30)
 
 print("kNN accuracy: " + kNN_prediction())
 #print("Naive Bayes accuracy: " + nb_prediction())
