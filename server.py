@@ -34,17 +34,6 @@ class S(BaseHTTPRequestHandler):
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
                 
-                # call the prediction function in ml.py
-                result = ml.prediction()
-                
-                # make a dictionary from the result
-                resultObj = { "result": result }
-                
-                # convert dictionary to JSON string
-                resultString = json.dumps(resultObj)
-                
-                self.wfile.write(resultString.encode('utf-8'))
-                
             elif self.path.endswith('.html'):
                 f = open(rootdir + self.path)
                 self.send_response(200)
@@ -74,7 +63,7 @@ class S(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
-
+    ml.prediction()
     print(f"Starting server on {addr}:{port}")
     httpd.serve_forever()
     
