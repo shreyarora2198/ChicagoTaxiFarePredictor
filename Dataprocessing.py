@@ -9,7 +9,8 @@ day = []
 time = []
 totaltime = []
 
-df =  pandas.read_csv('../unfiltered_data/chicago_taxi_trips_2016_01.csv')
+df =  pandas.read_csv('../unfiltered_data/chicago_taxi_trips_2016_12.csv')
+df = df.head(int(len(df)*(.15)))
 df.dropna(axis = 1, how ='all', inplace = True)
 
 df.drop(['taxi_id','trip_end_timestamp','dropoff_census_tract','pickup_community_area','dropoff_community_area','tips','tolls','extras','trip_total','payment_type','company'], axis =1, inplace = True)
@@ -40,4 +41,4 @@ df['Time'] = totaltime
 df['Date'] = day
 df['Fare_Label'] = label
 
-df.to_csv(r'../filtered_data/01_January_filtered.csv')
+df.to_csv(r'../filtered_data/12_December_filtered.csv')
