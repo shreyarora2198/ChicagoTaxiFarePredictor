@@ -7,68 +7,75 @@ Created on Sun Nov 17 12:30:01 2019
 """
 
 import pandas as pd
+import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neural_network import MLPClassifier
 
-def kNN_prediction():
+# models
+kNN_01 = KNeighborsClassifier()
+kNN_02 = KNeighborsClassifier()
+kNN_03 = KNeighborsClassifier()
+kNN_04 = KNeighborsClassifier()
+kNN_05 = KNeighborsClassifier()
+kNN_06 = KNeighborsClassifier()
+kNN_07 = KNeighborsClassifier()
+kNN_08 = KNeighborsClassifier()
+kNN_09 = KNeighborsClassifier()
+kNN_10 = KNeighborsClassifier()
+kNN_11 = KNeighborsClassifier()
+kNN_12 = KNeighborsClassifier()
+
+accuracies = [float]*12
+
+def kNN_train_month(month_num, df, model):
     
-    # Train a kNN model using the training set
-    clf_KNN = KNeighborsClassifier()
-    clf_KNN.fit(X_train, y_train)
+    ## REMOVE START
+    df.head(int(len(df)*(.15)))
+    ## REMOVE END
     
-    result = clf_KNN.predict(X_test)
+    # target label list
+    target = df.filter(['Fare_Label'], axis=1)
+    temp_targetlist = target.values.tolist()
+    targetlist = []
+    for array in temp_targetlist:
+        targetlist.append(array[0])
+    # data list
+    df.drop(['Fare_Label', 'Unnamed: 0'], axis = 1, inplace = True)
+    datalist = df.values.tolist()
+    # Randomly split data into 90% training and 10% test
     
-    return str(accuracy_score(y_test, result))
-
-def nb_prediction():
+    ## EDIT START
+    X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.33)
+    ## EDIT END
     
-    # Create NB classifier: 
-    nb = GaussianNB()
+    # train model
+    model.fit(X_train, y_train)
+    # get accuracy of model
+    test_results = model.predict(X_test)
+    accuracies[month_num-1] = accuracy_score(y_test, test_results)
 
-    # Train the model
-    nb.fit(X_train, y_train)
+def kNN_train():
+    # train a model for each month
     
-    # Predictions
-    result = nb.predict(X_test)
+    # January
+    df = pd.read_csv('../filtered_data/01_January_filtered.csv')
+    kNN_train_month(1,df,kNN_01)
     
-    return str(accuracy_score(y_test, result))
-
-def nn_prediction():
+    # February
+    df = pd.read_csv('../filtered_data/02_February_filtered.csv')
+    kNN_train_month(2,df,kNN_02)
     
-    learning_rate = 0.01
-    num_hidden_layers = 7
-
-    clf = MLPClassifier(solver='sgd', activation='logistic', 
-     learning_rate_init=learning_rate, learning_rate='constant', max_iter=1000, verbose='true',
-     hidden_layer_sizes=(num_hidden_layers,))
+    # March
+    df = pd.read_csv('../filtered_data/03_March_filtered.csv')
+    kNN_train_month(3,df,kNN_03)
     
-    clf.fit(X_train, y_train)
-
-    result = clf.predict(X_test)
-
-    return str(accuracy_score(y_test, result))
-
-df =  pd.read_csv('../filtered_data/01_January_filtered.csv')
-
-target = df.filter(['Fare_Label'], axis=1)
-
-# TEMPORARY! NEED TO REMOVE 'Unnamed: 0' from Dataprocessing.py
-df.drop(['Fare_Label', 'Unnamed: 0'], axis = 1, inplace = True)
-
-datalist = df.values.tolist()
-temp_targetlist = target.values.tolist()
-
-targetlist = []
-for array in temp_targetlist:
-    targetlist.append(array[0])
-
-# Randomly split data into 70% training and 30% test
-X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.30)
-
-print("kNN accuracy: " + kNN_prediction())
-#print("Naive Bayes accuracy: " + nb_prediction())
-#print("Neural Network accuracy: ", nn_prediction())
+    
+st = datetime.datetime.now()
+kNN_train()
+et = datetime.datetime.now()
+print("Total time: " + str(et-st))
+print("Jan Accuracy: " + str(accuracies[0]))
+print("Feb Accuracy: " + str(accuracies[1]))
+print("Mar Accuracy: " + str(accuracies[2]))
