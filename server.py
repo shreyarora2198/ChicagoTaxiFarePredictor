@@ -56,14 +56,58 @@ class S(BaseHTTPRequestHandler):
 
 
     def do_POST(self):
-        # Doesn't do anything with POST yet
-       self.send_error(404, 'POST not supported')  
+        rootdir = os.getcwd() 
+  
+        try:
+            print(rootdir + self.path)
+            
+            path = self.path.split("?",1)[0]
+
+            # handle 'addone' endpoint
+            if path == '/addone':
+			
+                # JSON string
+                payloadString = self.rfile.read(int(self.headers['Content-Length']))
+				
+                # Python dictionary
+                payload = json.loads(payloadString)
+                              
+                date = int(payload['date'])
+                print(date)
+
+
+                self.send_response(200)
+                self.send_header("Access-Control-Allow-Origin","*")
+                self.send_header("Access-Control-Allow-Methods","*")
+                self.send_header("Access-Control-Allow-Headers","*")
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                
+                # call the prediction function in ml.py
+                #result = ml.addOne(number)
+                
+                # make a dictionary from the result
+                #resultObj = { "number": result }
+                
+                # convert dictionary to JSON string
+                #resultString = json.dumps(resultObj)
+                
+                #self.wfile.write(resultString.encode('utf-8'))
+                
+            else:
+                self.send_error(404, 'endpoint not supported')  
+                
+        except IOError:
+            self.send_error(404, 'endpoint not found')  
+        
+
+
         
 
 def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
-    ml.prediction()
+    ml.kNN_train()
     print(f"Starting server on {addr}:{port}")
     httpd.serve_forever()
     
