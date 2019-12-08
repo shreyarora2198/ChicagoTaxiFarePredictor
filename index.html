@@ -4,13 +4,81 @@
     <meta charset="UTF-8">
     <title>CMPSC 445</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" type="text/css" href="css/calender.css">
+    <link rel="stylesheet" type="text/css" href="css/switches.css">
+
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map_canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6v5-2uaq_wusHDktM9ILcqIrlPtnZgEk&sensor=false">
+    </script>
+
+    <script type="text/javascript">
+
+        var coordinateType;
+        function toggle() {
+            if (document.getElementById("coordType").checked) {
+                coordinateType = "dropoff";
+                document.getElementById("toggleHeader").innerHTML = "Set Drop Off Coordinates"
+            }
+            else {
+                coordinateType = "pickup";
+                document.getElementById("toggleHeader").innerHTML = "Set Pick Up Coordinates"
+            }
+        }
+        var map;
+        function initialize() {
+            coordinateType = "pickup";
+            var myLatlng = new google.maps.LatLng(24.18061975930,79.36565089010);
+            var myOptions = {
+                zoom:7,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            map = new google.maps.Map(document.getElementById("gmap"), myOptions);
+            // marker refers to a global variable
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map
+            });
+
+            google.maps.event.addListener(map, "click", function(event) {
+                // get lat/lon of click
+                var clickLat = event.latLng.lat();
+                var clickLon = event.latLng.lng();
+
+                // show in input box
+                document.getElementById(coordinateType + "-lat").value = clickLat.toFixed(5);
+                document.getElementById(coordinateType + "-lon").value = clickLon.toFixed(5);
+
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(clickLat,clickLon),
+                    map: map
+                });
+            });
+        }
+
+        window.onload = function () { initialize()};
+
+
+    </script>
+
+    <style>
+        div#gmap {
+            width: 80%;
+            height: 500px;
+            border:double;
+        }
+    </style>
 
 </head>
 <body>
 <script src="js/main.js"></script>
+<script src="map.js"></script>
 
-<header class="masthead" style="background-image: url('img/contact-bg.jpg')">
+<header class="masthead">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -58,31 +126,42 @@
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
-                <div class="control-group">
-                    <div class="form-group col-xs-12 floating-label-form-group controls">
-                        <label>Pick Up</label>
-                        <input type="number" class="form-control" placeholder="Latitude" id="pickup-lat" required="" data-validation-required-message="Please enter your phone number.">
-                        <input type="text" class="form-control" placeholder="Longitude" id="pickup-lon" required="" data-validation-required-message="Please enter your phone number.">
+                <br>
+                <h3 id="toggleHeader">Set Pick Up Coordinates (Select switch to toggle)</h3>
+                <label class="switch" onclick="toggle()">
+                    <input type="checkbox" id="coordType">
+                    <span class="slider"></span>
+                </label>
+                <!-- MAP HOLDER -->
+                <div id="gmap" style="margin-top: 10px"></div>
 
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
                 <div class="control-group">
-                    <div class="form-group col-xs-12 floating-label-form-group controls">
-                        <label>Pick Up</label>
-                        <input type="number" class="form-control" placeholder="Latitude" id="dropoff-lat" required="" data-validation-required-message="Please enter your phone number.">
-                        <input type="number" class="form-control" placeholder="Longitude" id="dropoff-lon" required="" data-validation-required-message="Please enter your phone number.">
+                    <table>
+                        <tr>
+                            <td>
+                                <h2>Pick Up Coordinates</h2>
+                                <div class="form-group col-xs-12 floating-label-form-group controls">
+                                    <label>Pick Up</label>
+                                    <input type="number" class="form-control" placeholder="Latitude" id="pickup-lat" required="" data-validation-required-message="Please enter your phone number.">
+                                    <input type="text" class="form-control" placeholder="Longitude" id="pickup-lon" required="" data-validation-required-message="Please enter your phone number.">
 
-                        <p class="help-block text-danger"></p>
-                    </div>
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                            </td>
+                            <td>
+                                <h2>Drop Off Coordinates</h2>
+                                <div class="form-group col-xs-12 floating-label-form-group controls" style="float: right">
+                                    <label>Drop Off</label>
+                                    <input type="number" class="form-control" placeholder="Latitude" id="dropoff-lat" required="" data-validation-required-message="Please enter your phone number.">
+                                    <input type="number" class="form-control" placeholder="Longitude" id="dropoff-lon" required="" data-validation-required-message="Please enter your phone number.">
+
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls">
-                        <label>Notes</label>
-                        <textarea rows="5" class="form-control" placeholder="Message" id="message" required="" data-validation-required-message="Please enter a message."></textarea>
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
+
                 <br>
                 <div id="success"></div>
                 <div class="form-group">
@@ -92,6 +171,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 <!--<button onclick="getResult()">Get the result</button>-->
 <!--<p id="result"></p>-->
 </body>

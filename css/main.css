@@ -171,10 +171,11 @@ img::-moz-selection {
 header.masthead {
     margin-bottom: 50px;
     background: no-repeat center center;
-    background-color: #868e96;
+    background-color: orange;
     background-attachment: scroll;
     position: relative;
     background-size: cover;
+    color: white;
 }
 
 header.masthead .overlay {
@@ -183,7 +184,7 @@ header.masthead .overlay {
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: #212529;
+    /*background-color: #212529;*/
     opacity: 0.5;
 }
 
@@ -401,7 +402,7 @@ footer .copyright {
 }
 
 .btn-primary {
-    background-color: #53595f;
+    background-color: orange;
     border-color: white;
 }
 
