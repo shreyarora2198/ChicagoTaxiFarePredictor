@@ -9,11 +9,24 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import argparse
 import os
 import json
+import math
 
 import ml
 
 
+def convert_coordinate(coordinate):
+        dec_part, int_part = math.modf(coordinate)
+        dec_part = dec_part * 1000
+        return int(dec_part)
+    
+def convert_time(time):
+    converted_time = time.split(":")
+    return (int(converted_time[0])*60 + int(converted_time[1]))
 
+def convert_date(date):
+    year, month, day = date.split("-")
+    return(month,day)
+    
 class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -25,7 +38,7 @@ class S(BaseHTTPRequestHandler):
             path = self.path.split("?",1)[0]
             if path == '/':
                 self.path += 'index.html'   # default to index.html
-
+                
             if path == '/result':
                 self.send_response(200)
                 self.send_header("Access-Control-Allow-Origin","*")
@@ -33,7 +46,7 @@ class S(BaseHTTPRequestHandler):
                 self.send_header("Access-Control-Allow-Headers","*")
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
-                
+                         
             elif self.path.endswith('.html'):
                 f = open(rootdir + self.path)
                 self.send_response(200)
@@ -54,7 +67,7 @@ class S(BaseHTTPRequestHandler):
         except IOError:
             self.send_error(404, 'file not found')  
 
-
+    
     def do_POST(self):
         rootdir = os.getcwd() 
   
@@ -64,7 +77,7 @@ class S(BaseHTTPRequestHandler):
             path = self.path.split("?",1)[0]
 
             # handle 'addone' endpoint
-            if path == '/addone':
+            if path == '/result':
 			
                 # JSON string
                 payloadString = self.rfile.read(int(self.headers['Content-Length']))
@@ -72,10 +85,21 @@ class S(BaseHTTPRequestHandler):
                 # Python dictionary
                 payload = json.loads(payloadString)
                               
-                date = int(payload['date'])
-                print(date)
-
-
+                duration = int(payload['trip_seconds'])
+                miles = int(payload['trip_miles'])
+                pickup_latitude = float(payload['pickup_latitude'])
+                pickup_lat = convert_coordinate(pickup_latitude)
+                pickup_longitude = float(payload['pickup_longitude'])
+                pickup_lon = convert_coordinate(pickup_longitude)
+                dropoff_latitude = float(payload['dropoff_latitude'])
+                dropoff_lat = convert_coordinate(dropoff_latitude)
+                dropoff_longitude = float(payload['dropoff_longitude'])
+                dropoff_lon = convert_coordinate(dropoff_longitude)
+                time = str(payload['time'])
+                converted_time = convert_time(time)
+                date = str(payload['date'])
+                converted_month, converted_day = convert_date(date)
+                
                 self.send_response(200)
                 self.send_header("Access-Control-Allow-Origin","*")
                 self.send_header("Access-Control-Allow-Methods","*")
@@ -84,15 +108,15 @@ class S(BaseHTTPRequestHandler):
                 self.end_headers()
                 
                 # call the prediction function in ml.py
-                #result = ml.addOne(number)
+                result = ml.predict(duration, miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, converted_time, converted_month, converted_day)
                 
                 # make a dictionary from the result
-                #resultObj = { "number": result }
+                resultObj = { "number": result }
                 
                 # convert dictionary to JSON string
-                #resultString = json.dumps(resultObj)
+                resultString = json.dumps(resultObj)
                 
-                #self.wfile.write(resultString.encode('utf-8'))
+                self.wfile.write(resultString.encode('utf-8'))
                 
             else:
                 self.send_error(404, 'endpoint not supported')  

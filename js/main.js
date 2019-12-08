@@ -15,34 +15,32 @@ function getResult() {
     
     var payload = {"trip_seconds": trip_seconds,
                     "trip_miles": trip_miles,
-                    "pickup_latitude": pickup_latitude
-                    "pickup_longitude": pickup_longitude
-                    "dropoff_latitude": dropoff_latitude
-                    "dropoff_longitude": dropoff_longitude
-                    "time": time
+                    "pickup_latitude": pickup_latitude,
+                    "pickup_longitude": pickup_longitude,
+                    "dropoff_latitude": dropoff_latitude,
+                    "dropoff_longitude": dropoff_longitude,
+                    "time": time,
                     "date": date};
     // JSON string to post
     var payloadString = JSON.stringify(payload);
-    http.open("GET", url+endpoint, true);
+    http.open("POST", url+endpoint, true);
     	
-	
-	
 
-  //  http.onreadystatechange = function() {
-   //     var DONE = 4;       // 4 means the request is done.
-     //   var OK = 200;       // 200 means a successful return.
-       // if (http.readyState == DONE && http.status == OK && http.responseText) {
+    http.onreadystatechange = function() {
+        var DONE = 4;       // 4 means the request is done.
+        var OK = 200;       // 200 means a successful return.
+        if (http.readyState == DONE && http.status == OK && http.responseText) {
 
             // JSON string
-         //   replyString = http.responseText;
+            replyString = http.responseText;
 
             // turn JSON string into JavaScript object
-           // replyObj = JSON.parse(replyString);
+            replyObj = JSON.parse(replyString);
 
-           // document.getElementById("result").innerHTML = "JSON received: " + replyString;
+            document.getElementById("result").innerHTML = "JSON received: " + replyString;
 
-     //   }
- //   };
+        }
+    };
 
     // Send request
     http.send(payloadString);
