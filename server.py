@@ -61,6 +61,13 @@ class S(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(f.read().encode('utf-8'))  
                 f.close()
+            elif self.path.endswith('.css'):
+                f = open(rootdir + self.path)
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                self.wfile.write(f.read().encode('utf-8'))  
+                f.close()  
             else:
                 self.send_error(404, 'file not supported')  
                 
