@@ -12,8 +12,6 @@ import json
 
 import ml
 
-
-
 class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -48,6 +46,13 @@ class S(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(f.read().encode('utf-8'))  
                 f.close()
+            elif self.path.endswith('.css'):
+                f = open(rootdir + self.path)
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                self.wfile.write(f.read().encode('utf-8'))  
+                f.close()  
             else:
                 self.send_error(404, 'file not supported')  
                 
@@ -107,7 +112,7 @@ class S(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
-    ml.kNN_train()
+    #ml.kNN_train()
     print(f"Starting server on {addr}:{port}")
     httpd.serve_forever()
     
