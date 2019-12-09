@@ -8,6 +8,7 @@ Created on Sun Nov 17 12:30:01 2019
 
 import pandas as pd
 import threading
+import math
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
@@ -82,8 +83,19 @@ def kNN_train():
     t10.join()
     t11.join()
     t12.join()
+    
+def label_to_fare(label):
+    return_str = ""
+    first_num = label*5
+    second_num = first_num+4
+    if label < 20:
+        return_str = "$" + str(first_num) + ".00-" + str(second_num) + ".99"
+    else:
+        return_str = ">$100.00"
+    print("str: " + return_str)
+    return return_str
 
-#def predict(trip_seconds, trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, time, month, day):
+def predict(trip_seconds, trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, time, month, day):
     # example vals
         # trip_seconds: 180
         # trip_miles: 0.4
@@ -95,6 +107,11 @@ def kNN_train():
         # month: 1
         # day: 13
     
-     # make a prediction
-#     prediction = 
-#     return the prediction and the accuracy for that month
+    # create test data and label
+    X_test = [[int(trip_seconds), trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, time, day]]
+    # make a prediction
+    prediction = kNN_models[month-1].predict(X_test)
+    return label_to_fare(prediction[0])
+
+def get_accuracy(month):
+    return str(math.floor(accuracies[month-1]*100)) + "%"

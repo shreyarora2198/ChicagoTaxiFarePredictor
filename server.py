@@ -25,7 +25,7 @@ def convert_time(time):
 
 def convert_date(date):
     year, month, day = date.split("-")
-    return(month,day)
+    return(int(month),int(day))
     
 class S(BaseHTTPRequestHandler):
 
@@ -73,7 +73,6 @@ class S(BaseHTTPRequestHandler):
                 
         except IOError:
             self.send_error(404, 'file not found')  
-
     
     def do_POST(self):
         rootdir = os.getcwd() 
@@ -116,9 +115,11 @@ class S(BaseHTTPRequestHandler):
                 
                 # call the prediction function in ml.py
                 result = ml.predict(duration, miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, converted_time, converted_month, converted_day)
+                accuracy = ml.get_accuracy(converted_month)
                 
                 # make a dictionary from the result
-                resultObj = { "number": result }
+                resultObj = { "fare": result,
+                              "accuracy": accuracy }
                 
                 # convert dictionary to JSON string
                 resultString = json.dumps(resultObj)
@@ -130,14 +131,11 @@ class S(BaseHTTPRequestHandler):
                 
         except IOError:
             self.send_error(404, 'endpoint not found')  
-        
-
-
-        
 
 def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
+    print("Starting training...")
     ml.kNN_train()
     print(f"Starting server on {addr}:{port}")
     httpd.serve_forever()
