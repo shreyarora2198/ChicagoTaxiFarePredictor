@@ -56,6 +56,9 @@ function getResult() {
 
 function kNN(){
 
+    console.log("hello");
+    console.log(distances);
+
     var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
 
@@ -77,7 +80,7 @@ function kNN(){
             axisYType: "secondary",
             color: "#014D65",
             dataPoints: [
-                { y: distances[0], label: labels[0] },
+                //{ y: distances[0], label: labels[0] },
                 { y: 7, label: "Taiwan" },
                 { y: 5, label: "Russia" },
                 { y: 9, label: "Spain" },
