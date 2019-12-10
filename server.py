@@ -10,6 +10,7 @@ import argparse
 import os
 import json
 import math
+import numpy as np
 
 import ml
 
@@ -120,8 +121,8 @@ class S(BaseHTTPRequestHandler):
                 # make a dictionary from the result
                 resultObj = { "fare": prediction,
                               "accuracy": accuracy,
-                              "distances": distances,
-                              "fares": fares }
+                              "distances": np.array(distances).tolist(),
+                              "fares": np.array(fares).tolist() }
                 
                 # convert dictionary to JSON string
                 resultString = json.dumps(resultObj)

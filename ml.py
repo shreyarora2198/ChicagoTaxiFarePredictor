@@ -140,7 +140,7 @@ def predict(trip_seconds, trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropo
     for label in labels:
         fares.append(label_to_fare(label))
     
-    return label_to_fare(prediction[0]), distances, fares
+    return label_to_fare(prediction[0]), distances[0], fares
 
 def get_accuracy(month):
     return str(math.floor(accuracies[month-1]*100)) + "%"

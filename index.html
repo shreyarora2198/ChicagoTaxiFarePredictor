@@ -16,7 +16,7 @@
     </script>
 
     <script>
-    kNN() {
+    function kNN() {
 
     var chart = new CanvasJS.Chart("chartContainer", {
     	animationEnabled: true,
@@ -202,11 +202,15 @@
                 </div>
 
                 <br>
-                <div id="success"></div>
+                
                 <div class="form-group">
                     <button class="btn btn-primary" onclick="getResult()" id="sendMessageButton" style="pointer-event: none; cursor: default">Generate Prediction</button>
                     <p id = "submit"></p>
                 </div>
+
+                <div id="fare"></div>
+                <div id="accuracy"></div>
+
                 <div>
                   <div id="chartContainer" style="height: 300px; width: 100%;"/>
                   <button class="btn btn-primary" onclick="kNN()" id="kNN" style="pointer-event: none; cursor: default">Generate kNN</button>
@@ -216,11 +220,8 @@
         </div>
     </div>
 </div>
- <iframe width="0" height="0 border="0" name="dummyframe" id="dummyframe></iframe>
+ <iframe width="0" height="0" name="dummyframe" id="dummyframe"></iframe>
 
-
-
-<!--<button onclick="getResult()">Get the result</button>-->
 </body>
 </html>
 

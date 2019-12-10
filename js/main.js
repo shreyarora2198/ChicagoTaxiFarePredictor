@@ -37,7 +37,8 @@ function getResult() {
             // turn JSON string into JavaScript object
             replyObj = JSON.parse(replyString);
 
-            document.getElementById("success").innerHTML = "JSON received: " + replyString;
+            document.getElementById("fare").innerHTML = replyObj.fare;
+            document.getElementById("accuracy").innerHTML = replyObj.accuracy;
 
         }
     };
