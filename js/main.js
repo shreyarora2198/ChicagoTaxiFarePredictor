@@ -1,3 +1,6 @@
+var distances = [];
+var fares = [];
+
 function getResult() {
 
     var url = "http://localhost:8000";   // The URL and the port number must match the server-side
@@ -37,6 +40,9 @@ function getResult() {
             // turn JSON string into JavaScript object
             replyObj = JSON.parse(replyString);
 
+            distances = replyObj.distances;
+            fares = replyObj.fares;
+
             document.getElementById("fare").innerHTML = replyObj.fare;
             document.getElementById("accuracy").innerHTML = replyObj.accuracy;
 
@@ -47,3 +53,39 @@ function getResult() {
     http.send(payloadString);
 
 }
+
+function kNN(){
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+
+        title:{
+            text:"kNN results"
+        },
+        axisX:{
+            interval: 1,
+        title: "Labels"
+        },
+        axisY2:{
+            interlacedColor: "rgba(1,77,101,.2)",
+            gridColor: "rgba(1,77,101,.1)",
+            title: "Distances"
+        },
+        data: [{
+            type: "bar",
+            name: "distances",
+            axisYType: "secondary",
+            color: "#014D65",
+            dataPoints: [
+                { y: distances[0], label: labels[0] },
+                { y: 7, label: "Taiwan" },
+                { y: 5, label: "Russia" },
+                { y: 9, label: "Spain" },
+                { y: 7, label: "Brazil" },
+                { y: 7, label: "India" },
+                { y: 9, label: "Italy" }
+            ]
+        }]
+    });
+    chart.render();
+  }
