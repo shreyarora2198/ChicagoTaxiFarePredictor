@@ -9,18 +9,29 @@ Created on Sun Nov 17 12:30:01 2019
 import pandas as pd
 import threading
 import math
+import os
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-
 from sklearn.neighbors import KNeighborsClassifier
+
+dist_arr = []
 
 # models
 kNN_models = []
 for _ in range(12):
-    kNN_models.append(KNeighborsClassifier())
+    # Create k-NN classifier: k is 3, distance measure is L2 (Euclidean)
+    kNN_models.append(KNeighborsClassifier(n_neighbors=7))
 
 # accuracies for each month's model
 accuracies = [float]*12
+
+# files
+files = []
+directory = "../filtered_data"
+for filename in sorted(os.listdir(directory)):
+    if filename.endswith(".csv"):
+        files.append(os.path.join(directory, filename))
 
 def kNN_train_month(month_num, df):
         
@@ -43,18 +54,18 @@ def kNN_train_month(month_num, df):
 
 def kNN_train():
     # initialize threads for each model
-    t1 = threading.Thread(target=kNN_train_month, args=(1, pd.read_csv('../filtered_data/01_January_filtered.csv')))
-    t2 = threading.Thread(target=kNN_train_month, args=(2, pd.read_csv('../filtered_data/02_February_filtered.csv')))
-    t3 = threading.Thread(target=kNN_train_month, args=(3, pd.read_csv('../filtered_data/03_March_filtered.csv')))
-    t4 = threading.Thread(target=kNN_train_month, args=(4, pd.read_csv('../filtered_data/04_April_filtered.csv')))
-    t5 = threading.Thread(target=kNN_train_month, args=(5, pd.read_csv('../filtered_data/05_May_filtered.csv')))
-    t6 = threading.Thread(target=kNN_train_month, args=(6, pd.read_csv('../filtered_data/06_June_filtered.csv')))
-    t7 = threading.Thread(target=kNN_train_month, args=(7, pd.read_csv('../filtered_data/07_July_filtered.csv')))
-    t8 = threading.Thread(target=kNN_train_month, args=(8, pd.read_csv('../filtered_data/08_August_filtered.csv')))
-    t9 = threading.Thread(target=kNN_train_month, args=(9, pd.read_csv('../filtered_data/09_September_filtered.csv')))
-    t10 = threading.Thread(target=kNN_train_month, args=(10, pd.read_csv('../filtered_data/10_October_filtered.csv')))
-    t11 = threading.Thread(target=kNN_train_month, args=(11, pd.read_csv('../filtered_data/11_November_filtered.csv')))
-    t12 = threading.Thread(target=kNN_train_month, args=(12, pd.read_csv('../filtered_data/12_December_filtered.csv')))
+    t1 = threading.Thread(target=kNN_train_month, args=(1, pd.read_csv(files[0])))
+    t2 = threading.Thread(target=kNN_train_month, args=(2, pd.read_csv(files[1])))
+    t3 = threading.Thread(target=kNN_train_month, args=(3, pd.read_csv(files[2])))
+    t4 = threading.Thread(target=kNN_train_month, args=(4, pd.read_csv(files[3])))
+    t5 = threading.Thread(target=kNN_train_month, args=(5, pd.read_csv(files[4])))
+    t6 = threading.Thread(target=kNN_train_month, args=(6, pd.read_csv(files[5])))
+    t7 = threading.Thread(target=kNN_train_month, args=(7, pd.read_csv(files[6])))
+    t8 = threading.Thread(target=kNN_train_month, args=(8, pd.read_csv(files[7])))
+    t9 = threading.Thread(target=kNN_train_month, args=(9, pd.read_csv(files[8])))
+    t10 = threading.Thread(target=kNN_train_month, args=(10, pd.read_csv(files[9])))
+    t11 = threading.Thread(target=kNN_train_month, args=(11, pd.read_csv(files[10])))
+    t12 = threading.Thread(target=kNN_train_month, args=(12, pd.read_csv(files[11])))
     
     # start each thread
     t1.start()
@@ -92,8 +103,16 @@ def label_to_fare(label):
         return_str = "$" + str(first_num) + ".00-" + str(second_num) + ".99"
     else:
         return_str = ">$100.00"
-    print("str: " + return_str)
     return return_str
+
+def index_to_label(index_arr, month):
+    all_labels = pd.read_csv(files[month-1]).filter(['Fare_Label'], axis=1).values.tolist()
+
+    labels = []
+    for index in index_arr:
+        labels.append(all_labels[index][0])
+    
+    return labels
 
 def predict(trip_seconds, trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, time, month, day):
     # example vals
@@ -111,7 +130,17 @@ def predict(trip_seconds, trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropo
     X_test = [[int(trip_seconds), trip_miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, time, day]]
     # make a prediction
     prediction = kNN_models[month-1].predict(X_test)
-    return label_to_fare(prediction[0])
+    
+    # distances of five nearest neighbors
+    distances, indices = kNN_models[month-1].kneighbors(X_test, n_neighbors=7, return_distance=True)
+    
+    labels = index_to_label(indices[0], month)
+    
+    fares = []
+    for label in labels:
+        fares.append(label_to_fare(label))
+    
+    return label_to_fare(prediction[0]), distances, fares
 
 def get_accuracy(month):
     return str(math.floor(accuracies[month-1]*100)) + "%"

@@ -114,12 +114,14 @@ class S(BaseHTTPRequestHandler):
                 self.end_headers()
                 
                 # call the prediction function in ml.py
-                result = ml.predict(duration, miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, converted_time, converted_month, converted_day)
+                prediction, distances, fares = ml.predict(duration, miles, pickup_lat, pickup_lon, dropoff_lat, dropoff_lon, converted_time, converted_month, converted_day)
                 accuracy = ml.get_accuracy(converted_month)
                 
                 # make a dictionary from the result
-                resultObj = { "fare": result,
-                              "accuracy": accuracy }
+                resultObj = { "fare": prediction,
+                              "accuracy": accuracy,
+                              "distances": distances,
+                              "fares": fares }
                 
                 # convert dictionary to JSON string
                 resultString = json.dumps(resultObj)
