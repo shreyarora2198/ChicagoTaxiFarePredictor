@@ -112,6 +112,44 @@
         }
     </style>
 
+    <script>
+    function kNN(){
+
+      var chart = new CanvasJS.Chart("chartContainer", {
+      	animationEnabled: true,
+
+      	title:{
+      		text:"kNN results"
+      	},
+      	axisX:{
+      		interval: 1,
+          title: "Labels"
+      	},
+      	axisY2:{
+      		interlacedColor: "rgba(1,77,101,.2)",
+      		gridColor: "rgba(1,77,101,.1)",
+      		title: "Distances"
+      	},
+      	data: [{
+      		type: "bar",
+      		name: "distances",
+      		axisYType: "secondary",
+      		color: "#014D65",
+      		dataPoints: [
+      			{ y: 3, label: "Sweden" },
+      			{ y: 7, label: "Taiwan" },
+      			{ y: 5, label: "Russia" },
+      			{ y: 9, label: "Spain" },
+      			{ y: 7, label: "Brazil" },
+      			{ y: 7, label: "India" },
+      			{ y: 9, label: "Italy" }
+      		]
+      	}]
+      });
+      chart.render();
+    }
+    </script>
+
 </head>
 <body>
 <script src="js/main.js"></script>
@@ -211,16 +249,18 @@
                 <div id="fare"></div>
                 <div id="accuracy"></div>
 
-                <div>
-                  <div id="chartContainer" style="height: 300px; width: 100%;"/>
-                  <button class="btn btn-primary" onclick="kNN()" id="kNN" style="pointer-event: none; cursor: default">Generate kNN</button>
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="kNN()" id="sendMessageButton" style="pointer-event: none; cursor: default">Generate kNN</button>
+                    <div id="chartContainer" style="height: 300px; width: 100%;"/>
+                    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
                 </div>
-                <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
             </form>
         </div>
     </div>
 </div>
+
  <iframe width="0" height="0" name="dummyframe" id="dummyframe"></iframe>
+
 
 </body>
 </html>
