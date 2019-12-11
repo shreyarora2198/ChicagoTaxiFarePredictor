@@ -93,7 +93,7 @@ class S(BaseHTTPRequestHandler):
                 payload = json.loads(payloadString)
                               
                 duration = int(payload['trip_seconds'])
-                miles = int(payload['trip_miles'])
+                miles = float(payload['trip_miles'])
                 pickup_latitude = float(payload['pickup_latitude'])
                 pickup_lat = convert_coordinate(pickup_latitude)
                 pickup_longitude = float(payload['pickup_longitude'])

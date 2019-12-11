@@ -15,7 +15,7 @@ function getResult() {
     var dropoff_longitude = document.getElementById("dropoff-lon").value;
     var time = document.getElementById("time").value;
     var date = document.getElementById("date").value;
-    
+
     var payload = {"trip_seconds": trip_seconds,
                     "trip_miles": trip_miles,
                     "pickup_latitude": pickup_latitude,
@@ -27,7 +27,7 @@ function getResult() {
     // JSON string to post
     var payloadString = JSON.stringify(payload);
     http.open("POST", url+endpoint, true);
-    	
+
 
     http.onreadystatechange = function() {
         var DONE = 4;       // 4 means the request is done.
@@ -56,9 +56,6 @@ function getResult() {
 
 function kNN(){
 
-    console.log("hello");
-    console.log(distances);
-
     var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
 
@@ -80,13 +77,14 @@ function kNN(){
             axisYType: "secondary",
             color: "#014D65",
             dataPoints: [
-                //{ y: distances[0], label: labels[0] },
-                { y: 7, label: "Taiwan" },
-                { y: 5, label: "Russia" },
-                { y: 9, label: "Spain" },
-                { y: 7, label: "Brazil" },
-                { y: 7, label: "India" },
-                { y: 9, label: "Italy" }
+
+                { y: distances[0], label: fares[0] },
+                { y: distances[1], label: fares[1] },
+                { y: distances[2], label: fares[2] },
+                { y: distances[3], label: fares[3] },
+                { y: distances[4], label: fares[4] },
+                { y: distances[5], label: fares[5] },
+                { y: distances[6], label: fares[6] }
             ]
         }]
     });
