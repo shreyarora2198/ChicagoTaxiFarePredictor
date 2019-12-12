@@ -28,20 +28,29 @@
                 document.getElementById("toggleHeader").innerHTML = "Set Pick Up Coordinates"
             }
         }
+
         var map;
         function initialize() {
+            var pickup_marker;
+            var dropoff_marker;
             coordinateType = "pickup";
-            var myLatlng = new google.maps.LatLng(24.18061975930,79.36565089010);
+            var myLatlng = new google.maps.LatLng(41.882653, -87.623316);
             var myOptions = {
-                zoom:7,
+                zoom: 13,
                 center: myLatlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.HYBRID
             }
             map = new google.maps.Map(document.getElementById("gmap"), myOptions);
             // marker refers to a global variable
-            marker = new google.maps.Marker({
+            pickup_marker = new google.maps.Marker({
                 position: myLatlng,
-                map: map
+                map: map,
+                icon: './images/red_MarkerP.png'
+            });
+            dropoff_marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                icon: './images/blue_MarkerD.png'
             });
 
             google.maps.event.addListener(map, "click", function(event) {
@@ -53,10 +62,24 @@
                 document.getElementById(coordinateType + "-lat").value = clickLat.toFixed(5);
                 document.getElementById(coordinateType + "-lon").value = clickLon.toFixed(5);
 
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(clickLat,clickLon),
-                    map: map
-                });
+                if(coordinateType == "pickup") {
+                    pickup_marker.setMap(null);
+
+                    pickup_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(clickLat,clickLon),
+                        map: map,
+                        icon: './images/red_MarkerP.png'
+                    });
+                }
+                else {
+                    dropoff_marker.setMap(null);
+
+                    dropoff_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(clickLat,clickLon),
+                        map: map,
+                        icon: './images/blue_MarkerD.png'
+                    });
+                }
             });
         }
 
