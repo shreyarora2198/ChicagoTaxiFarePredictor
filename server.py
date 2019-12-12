@@ -69,6 +69,13 @@ class S(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(f.read().encode('utf-8'))  
                 f.close()  
+            elif self.path.endswith('.png'):
+                f = open(rootdir + self.path, 'rb')
+                self.send_response(200)
+                self.send_header("Content-type", "image/png")
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()  
             else:
                 self.send_error(404, 'file not supported')  
                 
