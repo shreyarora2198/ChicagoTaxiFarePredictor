@@ -45,12 +45,12 @@
             pickup_marker = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
-                icon: './images/red_MarkerP.png'
+                icon: 'red_MarkerP.png'
             });
             dropoff_marker = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
-                icon: './images/blue_MarkerD.png'
+                icon: 'blue_MarkerD.png'
             });
 
             google.maps.event.addListener(map, "click", function(event) {
@@ -68,7 +68,7 @@
                     pickup_marker = new google.maps.Marker({
                         position: new google.maps.LatLng(clickLat,clickLon),
                         map: map,
-                        icon: './images/red_MarkerP.png'
+                        icon: 'red_MarkerP.png'
                     });
                 }
                 else {
@@ -77,7 +77,7 @@
                     dropoff_marker = new google.maps.Marker({
                         position: new google.maps.LatLng(clickLat,clickLon),
                         map: map,
-                        icon: './images/blue_MarkerD.png'
+                        icon: 'blue_MarkerD.png'
                     });
                 }
             });
