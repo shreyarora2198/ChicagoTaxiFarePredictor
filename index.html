@@ -138,8 +138,8 @@
                 </div>
                 <div class="control-group">
                     <div class="form-group col-xs-12 floating-label-form-group controls">
-                        <label>Trip Duration (in seconds)</label>
-                        <input type="tel" class="form-control" placeholder="Trip Duration" id="duration" required="" data-validation-required-message="Please enter your phone number.">
+                        <label>Trip Duration</label>
+                        <input type="tel" class="form-control" placeholder="Trip Duration (in seconds)" id="duration" required="" data-validation-required-message="Please enter your phone number.">
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
@@ -178,7 +178,6 @@
                                     <label>Drop Off</label>
                                     <input type="number" class="form-control" placeholder="Latitude" id="dropoff-lat" required="" data-validation-required-message="Please enter your phone number.">
                                     <input type="number" class="form-control" placeholder="Longitude" id="dropoff-lon" required="" data-validation-required-message="Please enter your phone number.">
-
                                     <p class="help-block text-danger"></p>
                                 </div>
                             </td>
@@ -192,10 +191,11 @@
                     <button class="btn btn-primary" onclick="getResult()" id="sendMessageButton" style="pointer-event: none; cursor: default">Generate Prediction</button>
                     <p id = "submit"></p>
                 </div>
-
-                <div id="fare"></div>
-                <div id="accuracy"></div>
-
+                <br/>
+                <p> You should expect to pay: </p>
+                <p id="fare" align="center" style ="border:3px; border-style:solid; border-color:#FFA500; padding: 0.5em; font-size: 30pt;"/>
+                <p> Accuracy of the prediction: </p>
+                <p id="accuracy" align="center" style ="border:3px; border-style:solid; border-color:#FFA500; padding: 0.5em; font-size: 30pt;"/>
                 <div class="form-group">
                     <button class="btn btn-primary" onclick="kNN()" id="sendMessageButton" style="pointer-event: none; cursor: default">Visualize kNN</button>
                     <div id="chartContainer" style="height: 300px; width: 100%;"/>
