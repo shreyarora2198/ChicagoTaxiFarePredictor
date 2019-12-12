@@ -55,6 +55,8 @@ function getResult() {
 }
 
 function kNN(){
+    console.log(fares);
+    console.log(distances);
 
     var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
