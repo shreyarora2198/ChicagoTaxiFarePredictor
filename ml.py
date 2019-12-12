@@ -17,6 +17,8 @@ from sklearn.neighbors import KNeighborsClassifier
 
 dist_arr = []
 
+train_label_lists = []
+
 # models
 kNN_models = []
 for _ in range(12):
@@ -45,7 +47,9 @@ def kNN_train_month(month_num, df):
     df.drop(['Fare_Label', 'Unnamed: 0'], axis = 1, inplace = True)
     datalist = df.values.tolist()
     # Randomly split data into 66% training and 33% test
-    X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.33)    
+    X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.33)
+    # add the training label list
+    train_label_lists.append(y_train);
     # train model
     kNN_models[month_num-1].fit(X_train, y_train)
     # get accuracy of model
@@ -106,11 +110,13 @@ def label_to_fare(label):
     return return_str
 
 def index_to_label(index_arr, month):
-    all_labels = pd.read_csv(files[month-1]).filter(['Fare_Label'], axis=1).values.tolist()
+#    all_labels = pd.read_csv(files[month-1]).filter(['Fare_Label'], axis=1).values.tolist()
+    
+    all_labels = train_label_lists[month-1]
 
     labels = []
     for index in index_arr:
-        labels.append(all_labels[index][0])
+        labels.append(all_labels[index])
     
     return labels
 
