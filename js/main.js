@@ -80,13 +80,13 @@ function kNN(){
             color: "#014D65",
             dataPoints: [
 
-                { y: distances[0], label: fares[0] },
-                { y: distances[1], label: fares[1] },
-                { y: distances[2], label: fares[2] },
-                { y: distances[3], label: fares[3] },
-                { y: distances[4], label: fares[4] },
+                { y: distances[6], label: fares[6] },
                 { y: distances[5], label: fares[5] },
-                { y: distances[6], label: fares[6] }
+                { y: distances[4], label: fares[4] },
+                { y: distances[3], label: fares[3] },
+                { y: distances[2], label: fares[2] },
+                { y: distances[1], label: fares[1] },
+                { y: distances[0], label: fares[0] }
             ]
         }]
     });
