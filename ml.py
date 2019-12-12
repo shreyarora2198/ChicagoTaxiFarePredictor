@@ -17,7 +17,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 dist_arr = []
 
-train_label_lists = []
+train_label_lists = [[] for x in range(12)]
 
 # models
 kNN_models = []
@@ -49,7 +49,7 @@ def kNN_train_month(month_num, df):
     # Randomly split data into 66% training and 33% test
     X_train, X_test, y_train, y_test = train_test_split(datalist, targetlist, test_size=.33)
     # add the training label list
-    train_label_lists.append(y_train);
+    train_label_lists[month_num-1] = y_train;
     # train model
     kNN_models[month_num-1].fit(X_train, y_train)
     # get accuracy of model
@@ -109,9 +109,7 @@ def label_to_fare(label):
         return_str = ">$100.00"
     return return_str
 
-def index_to_label(index_arr, month):
-#    all_labels = pd.read_csv(files[month-1]).filter(['Fare_Label'], axis=1).values.tolist()
-    
+def index_to_label(index_arr, month):    
     all_labels = train_label_lists[month-1]
 
     labels = []
