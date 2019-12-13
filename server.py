@@ -90,7 +90,7 @@ class S(BaseHTTPRequestHandler):
             
             path = self.path.split("?",1)[0]
 
-            # handle 'addone' endpoint
+            # handle 'result' endpoint
             if path == '/result':
 			
                 # JSON string
@@ -142,6 +142,7 @@ class S(BaseHTTPRequestHandler):
         except IOError:
             self.send_error(404, 'endpoint not found')  
 
+#start server and train models
 def run(server_class=HTTPServer, handler_class=S, addr="localhost", port=8000):
     server_address = (addr, port)
     httpd = server_class(server_address, handler_class)
