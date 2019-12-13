@@ -61,47 +61,19 @@ def kNN_train_month(month_num, df):
 
 # train all models, one per month
 def kNN_train():
-    # initialize threads for each model
-    t1 = threading.Thread(target=kNN_train_month, args=(1, pd.read_csv(files[0])))
-    t2 = threading.Thread(target=kNN_train_month, args=(2, pd.read_csv(files[1])))
-    t3 = threading.Thread(target=kNN_train_month, args=(3, pd.read_csv(files[2])))
-    t4 = threading.Thread(target=kNN_train_month, args=(4, pd.read_csv(files[3])))
-    t5 = threading.Thread(target=kNN_train_month, args=(5, pd.read_csv(files[4])))
-    t6 = threading.Thread(target=kNN_train_month, args=(6, pd.read_csv(files[5])))
-    t7 = threading.Thread(target=kNN_train_month, args=(7, pd.read_csv(files[6])))
-    t8 = threading.Thread(target=kNN_train_month, args=(8, pd.read_csv(files[7])))
-    t9 = threading.Thread(target=kNN_train_month, args=(9, pd.read_csv(files[8])))
-    t10 = threading.Thread(target=kNN_train_month, args=(10, pd.read_csv(files[9])))
-    t11 = threading.Thread(target=kNN_train_month, args=(11, pd.read_csv(files[10])))
-    t12 = threading.Thread(target=kNN_train_month, args=(12, pd.read_csv(files[11])))
+    threads = []
+    
+    # create one thread per model
+    for i in range(12):
+        threads.append(threading.Thread(target=kNN_train_month, args=((i+1), pd.read_csv(files[i]))))
     
     # start each thread
-    t1.start()
-    t2.start()
-    t3.start()
-    t4.start()
-    t5.start()
-    t6.start()
-    t7.start()
-    t8.start()
-    t9.start()
-    t10.start()
-    t11.start()
-    t12.start()
+    for thread in threads:
+        thread.start()
     
     # join each thread
-    t1.join()
-    t2.join()
-    t3.join()
-    t4.join()
-    t5.join()
-    t6.join()
-    t7.join()
-    t8.join()
-    t9.join()
-    t10.join()
-    t11.join()
-    t12.join()
+    for thread in threads:
+        thread.join()
 
 # convert a label(0-20) to matching fare string
 def label_to_fare(label):
