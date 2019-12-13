@@ -28,20 +28,29 @@
                 document.getElementById("toggleHeader").innerHTML = "Set Pick Up Coordinates"
             }
         }
+
         var map;
         function initialize() {
+            var pickup_marker;
+            var dropoff_marker;
             coordinateType = "pickup";
-            var myLatlng = new google.maps.LatLng(24.18061975930,79.36565089010);
+            var myLatlng = new google.maps.LatLng(41.882653, -87.623316);
             var myOptions = {
-                zoom:7,
+                zoom: 13,
                 center: myLatlng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.HYBRID
             }
             map = new google.maps.Map(document.getElementById("gmap"), myOptions);
             // marker refers to a global variable
-            marker = new google.maps.Marker({
+            pickup_marker = new google.maps.Marker({
                 position: myLatlng,
-                map: map
+                map: map,
+                icon: 'red_MarkerP.png'
+            });
+            dropoff_marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                icon: 'blue_MarkerD.png'
             });
 
             google.maps.event.addListener(map, "click", function(event) {
@@ -53,10 +62,24 @@
                 document.getElementById(coordinateType + "-lat").value = clickLat.toFixed(5);
                 document.getElementById(coordinateType + "-lon").value = clickLon.toFixed(5);
 
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(clickLat,clickLon),
-                    map: map
-                });
+                if(coordinateType == "pickup") {
+                    pickup_marker.setMap(null);
+
+                    pickup_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(clickLat,clickLon),
+                        map: map,
+                        icon: 'red_MarkerP.png'
+                    });
+                }
+                else {
+                    dropoff_marker.setMap(null);
+
+                    dropoff_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(clickLat,clickLon),
+                        map: map,
+                        icon: 'blue_MarkerD.png'
+                    });
+                }
             });
         }
 
@@ -72,6 +95,7 @@
             border:double;
         }
     </style>
+
 
 </head>
 <body>
@@ -115,7 +139,7 @@
                 <div class="control-group">
                     <div class="form-group col-xs-12 floating-label-form-group controls">
                         <label>Trip Duration</label>
-                        <input type="tel" class="form-control" placeholder="Trip Duration" id="duration" required="" data-validation-required-message="Please enter your phone number.">
+                        <input type="tel" class="form-control" placeholder="Trip Duration (in seconds)" id="duration" required="" data-validation-required-message="Please enter your phone number.">
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
@@ -154,29 +178,37 @@
                                     <label>Drop Off</label>
                                     <input type="number" class="form-control" placeholder="Latitude" id="dropoff-lat" required="" data-validation-required-message="Please enter your phone number.">
                                     <input type="number" class="form-control" placeholder="Longitude" id="dropoff-lon" required="" data-validation-required-message="Please enter your phone number.">
-
                                     <p class="help-block text-danger"></p>
                                 </div>
                             </td>
                         </tr>
                     </table>
                 </div>
-               
+
                 <br>
-                <div id="success"></div>
+
                 <div class="form-group">
                     <button class="btn btn-primary" onclick="getResult()" id="sendMessageButton" style="pointer-event: none; cursor: default">Generate Prediction</button>
                     <p id = "submit"></p>
+                </div>
+                <br/>
+                <p> You should expect to pay: </p>
+                <p id="fare" align="center" style ="border:3px; border-style:solid; border-color:#FFA500; padding: 0.5em; font-size: 30pt;"/>
+                <p> Accuracy of the prediction: </p>
+                <p id="accuracy" align="center" style ="border:3px; border-style:solid; border-color:#FFA500; padding: 0.5em; font-size: 30pt;"/>
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="kNN()" id="sendMessageButton" style="pointer-event: none; cursor: default">Visualize kNN</button>
+                    <div id="chartContainer" style="height: 300px; width: 100%;"/>
+                    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
                 </div>
             </form>
         </div>
     </div>
 </div>
- <iframe width="0" height="0 border="0" name="dummyframe" id="dummyframe></iframe>
+
+ <iframe width="0" height="0" name="dummyframe" id="dummyframe"></iframe>
 
 
-
-<!--<button onclick="getResult()">Get the result</button>-->
 </body>
 </html>
 

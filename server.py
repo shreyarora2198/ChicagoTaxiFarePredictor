@@ -10,6 +10,7 @@ import argparse
 import os
 import json
 import math
+import numpy as np
 
 import ml
 
@@ -68,6 +69,13 @@ class S(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(f.read().encode('utf-8'))  
                 f.close()  
+            elif self.path.endswith('.png'):
+                f = open(rootdir + self.path, 'rb')
+                self.send_response(200)
+                self.send_header("Content-type", "image/png")
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()  
             else:
                 self.send_error(404, 'file not supported')  
                 
@@ -92,7 +100,7 @@ class S(BaseHTTPRequestHandler):
                 payload = json.loads(payloadString)
                               
                 duration = int(payload['trip_seconds'])
-                miles = int(payload['trip_miles'])
+                miles = float(payload['trip_miles'])
                 pickup_latitude = float(payload['pickup_latitude'])
                 pickup_lat = convert_coordinate(pickup_latitude)
                 pickup_longitude = float(payload['pickup_longitude'])
@@ -120,8 +128,8 @@ class S(BaseHTTPRequestHandler):
                 # make a dictionary from the result
                 resultObj = { "fare": prediction,
                               "accuracy": accuracy,
-                              "distances": distances,
-                              "fares": fares }
+                              "distances": np.array(distances).tolist(),
+                              "fares": np.array(fares).tolist() }
                 
                 # convert dictionary to JSON string
                 resultString = json.dumps(resultObj)

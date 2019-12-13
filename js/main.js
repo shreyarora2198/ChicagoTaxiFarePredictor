@@ -1,3 +1,6 @@
+var distances = [];
+var fares = [];
+
 function getResult() {
 
     var url = "http://localhost:8000";   // The URL and the port number must match the server-side
@@ -12,7 +15,7 @@ function getResult() {
     var dropoff_longitude = document.getElementById("dropoff-lon").value;
     var time = document.getElementById("time").value;
     var date = document.getElementById("date").value;
-    
+
     var payload = {"trip_seconds": trip_seconds,
                     "trip_miles": trip_miles,
                     "pickup_latitude": pickup_latitude,
@@ -24,7 +27,7 @@ function getResult() {
     // JSON string to post
     var payloadString = JSON.stringify(payload);
     http.open("POST", url+endpoint, true);
-    	
+
 
     http.onreadystatechange = function() {
         var DONE = 4;       // 4 means the request is done.
@@ -37,7 +40,11 @@ function getResult() {
             // turn JSON string into JavaScript object
             replyObj = JSON.parse(replyString);
 
-            document.getElementById("success").innerHTML = "JSON received: " + replyString;
+            distances = replyObj.distances;
+            fares = replyObj.fares;
+
+            document.getElementById("fare").innerHTML = replyObj.fare;
+            document.getElementById("accuracy").innerHTML = replyObj.accuracy;
 
         }
     };
@@ -46,3 +53,42 @@ function getResult() {
     http.send(payloadString);
 
 }
+
+function kNN(){
+    console.log(fares);
+    console.log(distances);
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+
+        title:{
+            text:"kNN results"
+        },
+        axisX:{
+            interval: 1,
+        title: "Labels"
+        },
+        axisY2:{
+            interlacedColor: "rgba(1,77,101,.2)",
+            gridColor: "rgba(1,77,101,.1)",
+            title: "Distances"
+        },
+        data: [{
+            type: "bar",
+            name: "distances",
+            axisYType: "secondary",
+            color: "#014D65",
+            dataPoints: [
+
+                { y: distances[6], label: fares[6] },
+                { y: distances[5], label: fares[5] },
+                { y: distances[4], label: fares[4] },
+                { y: distances[3], label: fares[3] },
+                { y: distances[2], label: fares[2] },
+                { y: distances[1], label: fares[1] },
+                { y: distances[0], label: fares[0] }
+            ]
+        }]
+    });
+    chart.render();
+  }
